@@ -1,5 +1,7 @@
 // picking ui element 
 let form = document.querySelector("#book-form");
+let booklist = document.querySelector("#book-list");
+
 
 
 // Boook Class
@@ -13,9 +15,7 @@ class Book {
 
 // UI class 
 class UI {
-    constructor() {
-
-    }
+   
     addBookList(book) {
         let list = document.querySelector('#book-list');
         let row = document.createElement('tr');
@@ -39,6 +39,17 @@ class UI {
         let form = document.querySelector("#book-form");
         container.insertBefore(div, form);
 
+        setTimeout(() => {
+            document.querySelector(".alert").remove();
+        }, 1000);
+
+    }
+
+    deleteBook(target) {
+        if (target.hasAttribute('href')) {
+            target.parentElement.parentElement.remove();
+       
+        }
     }
 }
 
@@ -46,6 +57,7 @@ class UI {
 // Event listener
 
 form.addEventListener('submit', newBook);
+booklist.addEventListener("click", removeBook);
 
 
 
@@ -57,7 +69,7 @@ function newBook(e) {
         author = document.querySelector("#author").value,
         isbn = document.querySelector("#isbn").value;
 
-    let ui = new UI();
+    
 
 
     if (title === "" || author === "" || isbn === "") {
@@ -65,12 +77,22 @@ function newBook(e) {
     }
     else {
         let book = new Book(title, author, isbn);
+        let ui = new UI();
         ui.addBookList(book);
         ui.clearFields();
+        ui.showAlert("book added", "success");
 
     }
 
 
     // console.log(book);
+    e.preventDefault();
+}
+
+
+function removeBook(e) {
+    let ui = new UI();
+    ui.deleteBook(e.target);
+    ui.showAlert("Book removed", "success");
     e.preventDefault();
 }
